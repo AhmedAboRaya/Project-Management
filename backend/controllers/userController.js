@@ -6,23 +6,19 @@ const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
   
   if (!email || !password || !name)  {
-    res.status(400);
-    throw new Error('Please fill all required fields');
+    return res.status(400).json('Please fill all required fields');
   }
   if (!email.match(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)) {
-    res.status(400);
-    throw new Error('Invalid email address');
+    return res.status(400).json('Invalid email address');
   }
   if (password.length < 6) {
-    res.status(400);
-    throw new Error('Password must be at least 6 characters long');
+    return res.status(400).json('Password must be at least 6 characters long');
   }
 
 
   const userExists = await User.findOne({ email });
   if (userExists) {
-    res.status(400);
-    throw new Error('User already exists');
+    return res.status(400).json('User already exists');
   }
 
   const user = await User.create({
@@ -39,8 +35,7 @@ const registerUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    res.status(400);
-    throw new Error('Invalid user data');
+    return res.status(400).json('Invalid user data');
   }
 });
 
@@ -49,12 +44,10 @@ const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   
   if (!email || !password)  {
-    res.status(400);
-    throw new Error('Please provide email and password');
+    return res.status(400).json('Please provide email and password');
   }
   if (!email.match(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)) {
-    res.status(400);
-    throw new Error('Invalid email address');
+    return res.status(400).json('Invalid email address');
   }
 
   const user = await User.findOne({ email });
@@ -67,8 +60,7 @@ const authUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    res.status(401);
-    throw new Error('Invalid email or password');
+    return res.status(401).json('Invalid credentials');
   }
 });
 
