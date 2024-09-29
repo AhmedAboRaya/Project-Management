@@ -128,6 +128,7 @@ const deleteProject = async (req, res) => {
   }
 };
 
+
 // Add a member to the project (only if the user is the owner)
 const addMember = async (req, res) => {
   const { id } = req.params;
